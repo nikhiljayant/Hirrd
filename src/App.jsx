@@ -11,9 +11,11 @@ import Job from "./components/Pages/Job";
 import SavedJob from "./components/Pages/SavedJob";
 import PostJob from "./components/Pages/PostJob";
 import MyJobs from "./components/Pages/MyJobs";
+import { ThemeProvider } from "./components/ThemeProvider";
 
 const router = createBrowserRouter([
   {
+    // We can add a Layout file or we can also directly add the <Outlet /> below to make our routes successfully work.
     element: <AppLayout />,
     children: [
       { path: "/", element: <LandingPage /> },
@@ -28,7 +30,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
 }
 
 export default App;
