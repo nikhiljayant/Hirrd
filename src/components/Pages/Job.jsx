@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import ApplyJobDrawer from "../Partials/ApplyJobDrawer";
 
 const Job = () => {
   const { isLoaded, user } = useUser();
@@ -30,8 +31,9 @@ const Job = () => {
     loading: loadingJob,
   } = useFetch(getSingleJob, { job_id: id });
 
-  const { fn: fnUpdateHiringStatus, loading: loadingUpdateHiringStatus } =
-    useFetch(updateHiringStatus, { job_id: id });
+  const { fn: fnUpdateHiringStatus, loading } = useFetch(updateHiringStatus, {
+    job_id: id,
+  });
 
   const handleStatusChange = (value) => {
     const isOpen = value === "open";
@@ -77,9 +79,9 @@ const Job = () => {
         </div>
       </div>
 
-      {!loadingUpdateHiringStatus && (
+      {/* {!loadingUpdateHiringStatus && (
         <BarLoader className="mb-4" width={"100%"} color="#36d7b7" />
-      )}
+      )} */}
       {job?.recruiter_id === user?.id && (
         <Select onValueChange={handleStatusChange}>
           <SelectTrigger
@@ -109,6 +111,15 @@ const Job = () => {
         source={job?.requirements}
         className="bg-transparent sm:text-lg"
       />
+
+      {job?.recruiter_id === user?.id && (
+        <ApplyJobDrawer
+          job={job}
+          user={user}
+          fetchJob={fnJob}
+          applied={job?.applications?.find((ap) => ap.candidate_id === user.id)}
+        />
+      )}
     </div>
   );
 };
