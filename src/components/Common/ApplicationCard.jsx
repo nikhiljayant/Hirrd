@@ -1,6 +1,26 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+// Dependency
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { BarLoader } from "react-spinners";
+// Icon
 import { Boxes, BriefcaseBusiness, Download, School } from "lucide-react";
+// Hook
+import useFetch from "@/hooks/useFetch";
+// Api
+import { updateApplicationStatus } from "@/api/apiApplications";
 
 const ApplicationCard = ({ application, isCandidate = false }) => {
   const handleDownload = () => {
@@ -10,8 +30,20 @@ const ApplicationCard = ({ application, isCandidate = false }) => {
     link.click();
   };
 
+  const { loading: loadingHiringStatus, fn: fnHiringStatus } = useFetch(
+    updateApplicationStatus,
+    {
+      job_id: application?.job_id,
+    }
+  );
+
+  const handleStatusChange = (status) => {
+    fnHiringStatus(status);
+  };
+
   return (
     <Card>
+      {loadingHiringStatus && <BarLoader width={"100%"} color="#36d7b7" />}
       <CardHeader>
         <CardTitle className="flex justify-between font-bold">
           {isCandidate
@@ -26,7 +58,7 @@ const ApplicationCard = ({ application, isCandidate = false }) => {
         </CardTitle>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="flex flex-col gap-4 flex-1">
         <div className="flex flex-col md:flex-row justify-between">
           <div className="flex gap-2 items-center">
             <BriefcaseBusiness size={15} /> {application?.experience} years of
@@ -40,8 +72,30 @@ const ApplicationCard = ({ application, isCandidate = false }) => {
           </div>
         </div>
         <hr />
-        {/* 2:53:21 */}
       </CardContent>
+      <CardFooter className="flex justify-between">
+        <span>{new Date(application?.created_at).toLocaleString()}</span>
+        {isCandidate ? (
+          <span className="capitalize font-bold">
+            Status: {application?.status}
+          </span>
+        ) : (
+          <Select
+            onValueChange={handleStatusChange}
+            defaultValue={application?.status}
+          >
+            <SelectTrigger className="w-52">
+              <SelectValue placeholder="Application Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="applied">Applied</SelectItem>
+              <SelectItem value="interviewing">Interviewing</SelectItem>
+              <SelectItem value="hired">Hired</SelectItem>
+              <SelectItem value="rejected">Rejected</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
+      </CardFooter>
     </Card>
   );
 };
