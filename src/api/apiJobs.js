@@ -94,3 +94,16 @@ export async function updateHiringStatus(token, { job_id }, isOpen) {
 
   return data;
 }
+
+export async function updateHiringStatus(token, _, jobData) {
+  const supabase = await supabaseClient(token);
+
+  let { data, error } = supabase.from("jobs").insert([jobData]).select();
+
+  if (error) {
+    console.error("Error fetching Job:", error);
+    return null;
+  }
+
+  return data;
+}
