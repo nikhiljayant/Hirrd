@@ -95,7 +95,7 @@ export async function updateHiringStatus(token, { job_id }, isOpen) {
   return data;
 }
 
-export async function updateHiringStatus(token, _, jobData) {
+export async function postJob(token, _, jobData) {
   const supabase = await supabaseClient(token);
 
   let { data, error } = supabase.from("jobs").insert([jobData]).select();
