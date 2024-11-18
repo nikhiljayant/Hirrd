@@ -24,6 +24,8 @@ import useFetch from "@/hooks/useFetch";
 // Api
 import { getCompanies } from "@/api/apiCompanies";
 import { postJob } from "@/api/apiJobs";
+// Components
+import AddCompanyDrawer from "../Partials/AddCompanyDrawer";
 
 const schema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
@@ -61,8 +63,6 @@ const PostJob = () => {
       isOpen: true,
     });
   };
-
-  console.log(dataCreateJob)
 
   useEffect(() => {
     if (dataCreateJob?.length > 0) navigate("/jobs");
@@ -152,6 +152,8 @@ const PostJob = () => {
               </Select>
             )}
           />
+
+          <AddCompanyDrawer fetchCompanies={fnCompanies} />
         </div>
         {errors.location && (
           <p className="text-red-500">{errors.location.message}</p>
