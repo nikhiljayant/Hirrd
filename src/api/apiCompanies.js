@@ -24,7 +24,7 @@ export async function addNewCompany(token, _, companyData) {
     .upload(fileName, companyData.logo);
 
   if (storageError) {
-    console.error("Error fetching Job:", error);
+    console.error("Error fetching Job:", storageError);
     return null;
   }
 

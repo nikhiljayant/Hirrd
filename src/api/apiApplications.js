@@ -11,7 +11,7 @@ export async function applyToJob(token, _, jobData) {
     .upload(fileName, jobData.resume);
 
   if (storageError) {
-    console.error("Error fetching Job:", error);
+    console.error("Error fetching Job:", storageError);
     return null;
   }
 

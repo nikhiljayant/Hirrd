@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 // Dependency
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -15,6 +15,11 @@ import {
 } from "../ui/drawer";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+// Api
+import { addNewCompany } from "@/api/apiCompanies";
+// Hook
+import useFetch from "@/hooks/useFetch";
+import { BarLoader } from "react-spinners";
 
 const schema = z.object({
   name: z.string().min(1, { message: "Company name is required" }),
@@ -36,8 +41,23 @@ const AddCompanyDrawer = ({ fetchCompanies }) => {
   } = useForm({ resolver: zodResolver(schema) });
 
   //   3:23:25
+  const {
+    loading: loadingAddCompany,
+    data: dataAddCompany,
+    error: errorAddCompany,
+    fn: fnAddCompany,
+  } = useFetch(addNewCompany);
 
-  const onSubmit = () => {};
+  const onSubmit = (data) => {
+    fnAddCompany({
+      ...data,
+      logo: data.logo[0],
+    });
+  };
+
+  useEffect(() => {
+    if (dataAddCompany?.length > 0) fetchCompanies();
+  }, [loadingAddCompany]);
 
   return (
     <Drawer>
@@ -71,6 +91,10 @@ const AddCompanyDrawer = ({ fetchCompanies }) => {
         </form>
         {errors.name && <p className="text-red-500">{errors.name.message}</p>}
         {errors.logo && <p className="text-red-500">{errors.logo.message}</p>}
+        {errorAddCompany && (
+          <p className="text-red-500">{errorAddCompany.message}</p>
+        )}
+        {loadingAddCompany && <BarLoader width={"100%"} color="#36d7b7" />}
         <DrawerFooter>
           <DrawerClose asChild>
             <Button variant="secondary" type="button">
