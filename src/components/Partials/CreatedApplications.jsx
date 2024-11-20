@@ -1,7 +1,7 @@
 import { getApplications } from "@/api/apiApplications";
 import useFetch from "@/hooks/useFetch";
 import { useUser } from "@clerk/clerk-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { BarLoader } from "react-spinners";
 import ApplicationCard from "../Common/ApplicationCard";
 
